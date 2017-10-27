@@ -16,8 +16,8 @@ function encrypt (key, file) {
   var base64 = tempFile.toString('base64')
   var resultArr = []
 
-  for (var i = 1; i <= Math.ceil(base64.length / 1000); i++) {
-    var piece = base64.slice((i - 1) * 1000, (i * 1000) < base64.length ? (i * 1000) : base64.length)
+  for (var i = 1; i <= Math.ceil(base64.length / 5000); i++) {
+    var piece = base64.slice((i - 1) * 5000, (i * 5000) < base64.length ? (i * 5000) : base64.length)
     var pieceUuid = uuidv5(piece, uuidv5NameSpace)
     var pieceEncrypt = _encrypt(key, piece)
 
