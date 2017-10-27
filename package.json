@@ -2,6 +2,13 @@
   "name": "pic-demo",
   "version": "0.0.1",
   "lint": "eslint --ext .js",
+  "scripts": {
+    "dev": "node index.js",
+    "start": "node index.js",
+    "build": "rm -rf ../magiecho.com/static && node build/build.js",
+    "update": "cd  ../magiecho.com && git add --all && git commit -m 'update' && git push",
+    "lint": "eslint --ext .js,"
+  },
   "dependencies": {
     "aes-js": "^3.1.0"
   },
