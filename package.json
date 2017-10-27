@@ -9,14 +9,14 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/MIKUScallion/pic-demo.git"
+    "url": "git+https://github.com/Jackliu007888/pic-demo.git"
   },
   "author": "",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/MIKUScallion/pic-demo/issues"
+    "url": "https://github.com/Jackliu007888/pic-demo/issues"
   },
-  "homepage": "https://github.com/MIKUScallion/pic-demo#readme",
+  "homepage": "https://github.com/Jackliu007888/pic-demo#readme",
   "devDependencies": {
     "eslint": "^4.9.0",
     "eslint-config-standard": "^10.2.1",
