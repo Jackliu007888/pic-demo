@@ -5,13 +5,21 @@ var pieceEncrypt = require('./index.js')
 var key256 = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15,
   16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28,
   29, 30, 31]
-var result = pieceEncrypt.encrypt(key256, './src/dddog.jpg')
-var testResult = pieceEncrypt.decrypt(key256, result)
 
+pieceEncrypt.config({
+  debug: false
+})
+
+var result = pieceEncrypt.encrypt(key256, './src/dddog.jpg')
+var testResult = pieceEncrypt.decrypt(key256,
+  result.resultPiece.data,
+  result.resultFile.data.split(','))
+
+console.log(result)
 fs.writeFile('./dist/dddog.jpg', testResult, 'base64', function (err) {
   if (err) console.log(err)
 })
-fs.writeFile('./dist/dddog.jpg.json', JSON.stringify(result), function (err) {
+fs.writeFile('./dist/dddog.jpg.json', JSON.stringify(result.resultPiece), function (err) {
   if (err) console.log(err)
 })
 
