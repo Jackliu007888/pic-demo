@@ -4,38 +4,43 @@ var fs = require('fs')
 var config = require('./accessconfig')
 var email = require('./email')
 var jsonData = JSON.parse(fs.readFileSync('./dist/dddog.jpg.json'))
-var uploadErr = false
-var upNode = 0
+var times = 3
+var errMsg = ''
 
-upHandle(jsonData.data, {}, uploadErr, upNode)
+upHandle(jsonData.data, {}, times)
 
-function upHandle(data, argcfg, uploadErr, upNode) {
-  var client = new OSS({
-    region: argcfg.region || config.region,
-    accessKeyId: argcfg.accessKeyId || config.accessKeyId,
-    accessKeySecret: argcfg.accessKeySecret || config.accessKeySecret,
-    bucket: argcfg.bucket || config.bucket
-  })
-  co(function* () {
-    for (var i = upNode; i < jsonData.data.length; i++) {
-      var uuid = jsonData.data[i].uuid
-      var data = jsonData.data[i].data
-      var result = yield client.put('piece/' + uuid + '.txt', Buffer.from(data))
-      console.log(result)
-      upNode = i
-    }
-  }).then(function (value) {
-    console.log('全部分片上传成功')
-  }, function (err) {
-    errHandle(err)
-  })
+function upHandle(data, argcfg, times) {
+  if (times < 0) {
+    errHandle(errMsg)
+  } else {
+    var client = new OSS({
+      region: argcfg.region || config.region,
+      accessKeyId: argcfg.accessKeyId || config.accessKeyId,
+      accessKeySecret: argcfg.accessKeySecret || config.accessKeySecret,
+      bucket: argcfg.bucket || config.bucket
+    })
+    co(function* () {
+      for (var i = 0; i < jsonData.data.length; i++) {
+        var uuid = jsonData.data[i].uuid
+        var data = jsonData.data[i].data
+        var result = yield client.put('piece/' + uuid + '.txt', Buffer.from(data))
+        console.log(result)
+      }
+    }).then(function (value) {
+      console.log('全部分片上传成功')
+    }, function (err) {
+      upHandle(jsonData.data, {}, --times)
+      console.log(err)
+      console.log('剩余重新上传次数：' + (times + 1) + '次')
+      errMsg = err
+    })
+  }
 }
 
 function errHandle(err) {
   // 写入本地日志
-  uploadErr = true
   var date = new Date()
-  fs.appendFile('./src/message.txt', date + '\n' + err.stack + '\n', function (err) {
+  fs.appendFile('./src/log.txt', date + '\n' + err + '\n', function (err) {
     if (err) console.log(err)
   })
   // 非断网发邮件
