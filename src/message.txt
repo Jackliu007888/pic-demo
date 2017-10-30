@@ -1,0 +1,4 @@
+Mon Oct 30 2017 14:48:37 GMT+0800 (中国标准时间)
+Error: getaddrinfo ENOTFOUND pic-demo.oss-cn-shenzhen.aliyuncs.com pic-demo.oss-cn-shenzhen.aliyuncs.com:80
+    at errnoException (dns.js:50:10)
+    at GetAddrInfoReqWrap.onlookup [as oncomplete] (dns.js:92:26)
