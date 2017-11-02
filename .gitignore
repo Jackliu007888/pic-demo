@@ -4,3 +4,4 @@ dist
 accessconfig.js
 /src/log.txt
 te.js
+src/config.json

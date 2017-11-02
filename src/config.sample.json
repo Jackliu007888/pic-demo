@@ -1,0 +1,18 @@
+{
+  "cryptology": {
+    "keyA": {
+      "secret": "test_secret_s_a",
+      "salt": "test_salt_s_a"
+    },
+    "keyB": {
+      "secret": "test_secret_s_b",
+      "salt": "test_salt_s_b"
+    },
+    "piece": {
+      "uuidv5NameSpace": "659d9399-74a4-417d-aba4-896cac37601f"
+    },
+    "block": {
+      "uuidv5NameSpace": "659d9399-74a4-417d-aba4-896cac37601f"
+    }
+  }
+}
