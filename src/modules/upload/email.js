@@ -2,49 +2,38 @@
  * @Author: Jackliu
  * @Date: 2017-10-31 11:33:21
  * @Last Modified by: Jackliu
- * @Last Modified time: 2017-10-31 17:09:58
+ * @Last Modified time: 2017-11-02 23:38:02
  */
 
-/* 
+/*
  *  npm install nodemailer --save
  *  var email = require('./email')
- *  //  usage 
+ *  //  usage
  *  // 自定义参数
  *  email.mailConfig({
- *    service: string,   
+ *    service: string,
  *  // 常用：'Gmail','Hotmail','iCloud','Outlook365','QQ','QQex','163','qiye.aliyun'
- *    port: number                              发送端口          
+ *    port: number                              发送端口
  *    secureConnection: boolean                 是否安全连接
  *    auth: { user: string, pass: string },     邮箱名及密码（密码为第三方授权码）
  *    from: string,                             发件人
  *    to: string,                               收件人
  *    subject: string,                          主题
- *    text: string                              发送内容        
+ *    text: string,                              发送内容
+ *    attachments: [{
+ *      filename: filename,
+ *      path: path
+ *    }]
  *  })
  *  // 执行发送
  *  email.sendEmail()
  */
-
-var config = require('./accessconfig')
 var nodemailer = require('nodemailer')
-
 var mailOptions = {
   // \node_modules\nodemailer\lib\well-known\services.json
   service: 'QQex',
   port: 465,
-  secureConnection: true,
-  auth: {
-    user: config.emailFrom,
-    pass: config.emailPass
-  },
-  from: config.emailFrom,
-  to: config.emailTo,
-  subject: 'Hello sir',
-  text: 'Hello world ?',
-  attachments: [{
-    filename: 'log.txt',
-    path: './src/log.txt'
-  }]
+  secureConnection: true
 }
 
 function mailConfig(args) {
@@ -56,6 +45,7 @@ function mailConfig(args) {
   mailOptions.to = args.to || mailOptions.to
   mailOptions.subject = args.subject || mailOptions.subject
   mailOptions.text = args.text || mailOptions.text
+  mailOptions.attachments = args.attachments || mailOptions.attachments
 }
 
 function sendEmail() {

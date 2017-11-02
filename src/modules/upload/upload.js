@@ -1,7 +1,7 @@
 var OSS = require('ali-oss')
 var co = require('co')
 var fs = require('fs')
-var config = require('./accessconfig')
+
 var email = require('./email')
 var jsonData = JSON.parse(fs.readFileSync('./dist/dddog.jpg.json'))
 var times = 3
