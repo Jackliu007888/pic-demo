@@ -1,38 +1,41 @@
 var OSS = require('ali-oss')
 var co = require('co')
 var fs = require('fs')
-
 var email = require('./email')
-var jsonData = JSON.parse(fs.readFileSync('./dist/dddog.jpg.json'))
-var times = 3
-var errMsg = ''
+var emailConfig = {}
 
-upHandle(jsonData.data, {}, times)
+var ossConfig = {
+  region: 'oss-cn-shenzhen',
+  bucket: 'pic-demo'
+}
 
-function upHandle(data, argcfg, times) {
+function setConfig(args) {
+  ossConfig.region = args.region || ossConfig.region
+  ossConfig.bucket = args.bucket || ossConfig.bucket
+  ossConfig.accessKeyId = args.accessKeyId || ossConfig.accessKeyId
+  ossConfig.accessKeySecret = args.accessKeySecret || ossConfig.accessKeySecret
+  emailConfig = args.emailConfig
+}
+
+function upHandle(jData, times, cloudPath, errMsg) {
   if (times < 0) {
     errHandle(errMsg)
   } else {
-    var client = new OSS({
-      region: argcfg.region || config.region,
-      accessKeyId: argcfg.accessKeyId || config.accessKeyId,
-      accessKeySecret: argcfg.accessKeySecret || config.accessKeySecret,
-      bucket: argcfg.bucket || config.bucket
-    })
+    var client = new OSS(ossConfig)
     co(function* () {
-      for (var i = 0; i < jsonData.data.length; i++) {
-        var uuid = jsonData.data[i].uuid
-        var data = jsonData.data[i].data
-        var result = yield client.put('piece/' + uuid + '.txt', Buffer.from(data))
-        console.log(result)
+      for (var i = 0; i < jData.length; i++) {
+        var uuid = jData[i].uuid
+        var data = jData[i].data
+        var result = yield client.put(cloudPath + uuid + '.txt', Buffer.from(data))
+        console.log('No.' + i + ' status: ' + result.res.status)
       }
     }).then(function (value) {
+      email.sendEmail(emailConfig, '全部分片上传成功', '上传成功')
       console.log('全部分片上传成功')
     }, function (err) {
-      upHandle(jsonData.data, {}, --times)
-      console.log(err)
-      console.log('剩余重新上传次数：' + (times + 1) + '次')
+      console.log('剩余重新上传次数：' + times + '次')
       errMsg = err
+      upHandle(jData, --times, cloudPath, errMsg)
     })
   }
 }
@@ -44,10 +47,12 @@ function errHandle(err) {
     if (err) console.log(err)
   })
   // 非断网发邮件
-  email.mailConfig({
-    subject: '分片上传出错!',
-    text: err.stack
-  })
-  email.sendEmail()
+  email.sendEmail(emailConfig, err, '上传失败')
   console.error(err.stack)
+}
+
+module.exports = {
+  upHandle,
+  errHandle,
+  setConfig
 }

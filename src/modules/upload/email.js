@@ -2,7 +2,7 @@
  * @Author: Jackliu
  * @Date: 2017-10-31 11:33:21
  * @Last Modified by: Jackliu
- * @Last Modified time: 2017-11-02 23:38:02
+ * @Last Modified time: 2017-11-03 23:46:36
  */
 
 /*
@@ -10,7 +10,7 @@
  *  var email = require('./email')
  *  //  usage
  *  // 自定义参数
- *  email.mailConfig({
+ *  mailConfig = {
  *    service: string,
  *  // 常用：'Gmail','Hotmail','iCloud','Outlook365','QQ','QQex','163','qiye.aliyun'
  *    port: number                              发送端口
@@ -24,39 +24,32 @@
  *      filename: filename,
  *      path: path
  *    }]
- *  })
+ *  }
  *  // 执行发送
- *  email.sendEmail()
+ *  email.sendEmail(mailConfig, text. subject)
  */
 var nodemailer = require('nodemailer')
-var mailOptions = {
-  // \node_modules\nodemailer\lib\well-known\services.json
-  service: 'QQex',
-  port: 465,
-  secureConnection: true
-}
 
-function mailConfig(args) {
-  mailOptions.service = args.service || mailOptions.service
-  mailOptions.port = args.port || mailOptions.port
-  mailOptions.secureConnection = args.secureConnection || mailOptions.secureConnection
-  mailOptions.auth = args.auth || mailOptions.auth
-  mailOptions.from = args.from || mailOptions.from
-  mailOptions.to = args.to || mailOptions.to
-  mailOptions.subject = args.subject || mailOptions.subject
-  mailOptions.text = args.text || mailOptions.text
-  mailOptions.attachments = args.attachments || mailOptions.attachments
-}
-
-function sendEmail() {
-  console.log(mailOptions)
+function sendEmail(config, text, subject) {
+  var mailOptions = {
+    service: config.service || 'QQex',
+    port: config.port || 465,
+    secureConnection: config.secureConnection || true,
+    auth: config.auth || '',
+    from: config.from || '',
+    to: config.to || '',
+    subject: subject || config.subject || '',
+    text: text || config.text || '',
+    attachments: config.attachments || ''
+  }
   var transporter = nodemailer.createTransport({
     service: mailOptions.service,
     port: mailOptions.port,
     secureConnection: mailOptions.secureConnection,
-    auth: mailOptions.secureConnection
+    auth: mailOptions.auth
   })
   transporter.sendMail(mailOptions, function (error, info) {
+    // console.log(mailOptions)
     if (error) {
       return console.log(error)
     }
@@ -65,6 +58,5 @@ function sendEmail() {
 }
 
 module.exports = {
-  sendEmail,
-  mailConfig
+  sendEmail
 }

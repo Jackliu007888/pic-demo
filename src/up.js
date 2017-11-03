@@ -1,7 +1,8 @@
 var config = require('./config.json')
-var email = require('./modules/upload/email')
-
-email.mailConfig({
+var jsonData = require('../dist/dddog.jpg.json')
+var upload = require('./modules/upload/upload')
+var cloudPath = 'piece/'
+var emailConfig = {
   service: 'QQex',
   auth: {
     user: config.upconfig.emailFrom,
@@ -15,6 +16,12 @@ email.mailConfig({
     filename: 'file',
     path: './src/config.json'
   }]
-
+}
+upload.setConfig({
+  accessKeyId: config.upconfig.accessKeyId,
+  accessKeySecret: config.upconfig.accessKeySecret,
+  emailConfig: emailConfig
 })
-email.sendEmail()
+
+// args: 分片数据、重传次数、云端文件夹、错误信息、邮箱设置
+upload.upHandle(jsonData.data, 3, cloudPath, '', emailConfig)
