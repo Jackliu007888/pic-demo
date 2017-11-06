@@ -30,7 +30,7 @@ function upHandle(jData, times, cloudPath, errMsg) {
         console.log('No.' + i + ' status: ' + result.res.status)
       }
     }).then(function (value) {
-      email.sendEmail(emailConfig, '全部分片上传成功', '上传成功')
+      // email.sendEmail(emailConfig, '全部分片上传成功', '上传成功')
       console.log('全部分片上传成功')
     }, function (err) {
       console.log('剩余重新上传次数：' + times + '次')
@@ -43,7 +43,7 @@ function upHandle(jData, times, cloudPath, errMsg) {
 function errHandle(err) {
   // 写入本地日志
   var date = new Date()
-  fs.appendFile('./src/log.txt', date + '\n' + err + '\n', function (err) {
+  fs.appendFile(emailConfig.attachments[0].path, date + '\n' + err + '\n', function (err) {
     if (err) console.log(err)
   })
   // 非断网发邮件

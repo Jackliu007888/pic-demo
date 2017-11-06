@@ -14,5 +14,14 @@
     "block": {
       "uuidv5NameSpace": "659d9399-74a4-417d-aba4-896cac37601f"
     }
+  },
+  "upconfig":{
+      "region": "oss-cn-shenzhen",
+      "accessKeyId":"abcderfj",
+      "accessKeySecret":"abcderfjabcderfjabcderfj",
+      "bucket":"pic-abcderfj",
+      "emailFrom":"abcderfj@abcderfj.com.cn",
+      "emailTo":"abcderfj@abcderfj.com.cn",
+      "emailPass":"abcderfjabcderfj"
   }
 }
