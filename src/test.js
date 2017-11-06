@@ -24,7 +24,10 @@ encrypt()
 function encrypt () {
   encryptResult = pieceEncrypt.encrypt(keyA, path.join(__dirname, '/assets/dddog.jpg'))
   encryptResult.resultBlock.data = blockEncrypt.encrypt(keyB, encryptResult.resultBlock.data)
-  fs.writeFile(path.join(__dirname, '../dist/dddog.jpg.json'), JSON.stringify(encryptResult.resultPiece), function (err) {
+  fs.writeFile(path.join(__dirname, '../dist/dddog.jpg.piece.json'), JSON.stringify(encryptResult.resultPiece), function (err) {
+    if (err) console.log(err)
+  })
+  fs.writeFile(path.join(__dirname, '../dist/dddog.jpg.block.json'), JSON.stringify(encryptResult.resultBlock), function (err) {
     if (err) console.log(err)
   })
 }
