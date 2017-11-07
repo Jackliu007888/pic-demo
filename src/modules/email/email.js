@@ -42,12 +42,14 @@ function sendEmail(config, text, subject) {
     text: text || config.text || '',
     attachments: config.attachments || ''
   }
+
   var transporter = nodemailer.createTransport({
     service: mailOptions.service,
     port: mailOptions.port,
     secureConnection: mailOptions.secureConnection,
     auth: mailOptions.auth
   })
+
   transporter.sendMail(mailOptions, function (error, info) {
     // console.log(mailOptions)
     if (error) {

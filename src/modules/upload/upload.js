@@ -1,7 +1,7 @@
 var OSS = require('ali-oss')
 var co = require('co')
 var fs = require('fs')
-var email = require('./email')
+var email = require('../email/email')
 var emailConfig = {}
 
 var ossConfig = {

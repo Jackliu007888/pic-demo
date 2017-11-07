@@ -26,6 +26,11 @@ function shuffle (arr) {
   return arr
 }
 
+function shuffle2 (arr) {
+  for (var j, x, i = arr.length, m = arr.length / 2; i; j = parseInt(Math.random() * m * 2), x = arr[--i], arr[i] = arr[j], arr[j] = x);
+  return arr
+}
+
 function generateKey (secret, salt, options) {
   options = options || {}
   options.iterations = options.iterations || 100000
