@@ -44,5 +44,6 @@ module.exports = {
   encrypt,
   decrypt,
   shuffle,
+  shuffle2,
   generateKey
 }
