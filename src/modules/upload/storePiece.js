@@ -2,7 +2,7 @@
  * @Author: Jackliu
  * @Date: 2017-11-06 21:29:56
  * @Last Modified by: Jackliu
- * @Last Modified time: 2017-11-16 00:24:04
+ * @Last Modified time: 2017-11-16 02:33:51
  */
 var utils = require('./utils')
 
@@ -36,7 +36,7 @@ function add(jData) {
       console.log('piece update success!')
     })
   } else {
-    console.log('jData type error!')
+    console.log('unknown type!')
   }
 }
 

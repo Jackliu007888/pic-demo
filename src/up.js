@@ -4,6 +4,8 @@ var jsonDataBlock = require('../dist/dddog.jpg.block.json')
 var upload = require('./modules/upload/upload')
 var storeBlock = require('./modules/upload/storeBlock')
 var storePiece = require('./modules/upload/storePiece')
+var wilddogUp = require('./modules/upload/wilddogUp.js')
+
 var cloudPath = 'piece/'
 var emailConfig = {
   service: 'QQex',
@@ -33,5 +35,6 @@ storeBlock.del(jsonDataBlock)
 storePiece.search(jsonDataPiece.data[1].uuid, function (params) {
   console.log(params)
   require('./modules/upload/utils').connectDb().close()
-
 })
+
+wilddogUp.upload(jsonDataBlock, 'block')
