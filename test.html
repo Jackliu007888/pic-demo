@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+
+<body>
+
+    <script src="https://cdn.wilddog.com/sdk/js/2.5.17/wilddog-sync.js"></script>
+    <script>
+        var config = {
+            syncURL: "https://wd2184918949wfrbrk.wilddogio.com/"
+        };
+        wilddog.initializeApp(config);
+        var ref = wilddog.sync().ref();
+        ref.child('block').child('-KyfYE3NGFyoaEMX7rxa').on("value", function (snapshot) {
+            console.log(snapshot.val());
+        });
+
+    </script>
+</body>
+
+</html>

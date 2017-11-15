@@ -1,7 +1,9 @@
 var config = require('./config.json')
-var jsonData = require('../dist/dddog.jpg.piece.json')
+var jsonDataPiece = require('../dist/dddog.jpg.piece.json')
+var jsonDataBlock = require('../dist/dddog.jpg.block.json')
 var upload = require('./modules/upload/upload')
-var store = require('./modules/upload/store')
+var storeBlock = require('./modules/upload/storeBlock')
+var storePiece = require('./modules/upload/storePiece')
 var cloudPath = 'piece/'
 var emailConfig = {
   service: 'QQex',
@@ -25,6 +27,11 @@ upload.setConfig({
 })
 
 // args: 分片数据、重传次数、云端文件夹、错误信息、邮箱设置
-upload.upHandle(jsonData.data, 3, cloudPath, '', emailConfig)
+// upload.upHandle(jsonDataPiece.data, 3, cloudPath, '', emailConfig)
 
-store(jsonData.data)
+storeBlock.del(jsonDataBlock)
+storePiece.search(jsonDataPiece.data[1].uuid, function (params) {
+  console.log(params)
+  require('./modules/upload/utils').connectDb().close()
+
+})
