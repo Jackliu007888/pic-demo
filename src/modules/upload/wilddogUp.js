@@ -1,6 +1,4 @@
 var wilddog = require('wilddog')
-var pieceJsonData = require('../../../dist/dddog.jpg.piece.json')
-var blockJsonData = require('../../../dist/dddog.jpg.block.json')
 var config = {
   syncURL: 'https://wd2184918949wfrbrk.wilddogio.com/'
 }
@@ -36,8 +34,6 @@ function upload(jData, type) {
   }
 }
 
-// upload(pieceJsonData.data, 'piece')
-upload(blockJsonData, 'block')
 module.exports = {
   setConfig,
   upload

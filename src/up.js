@@ -29,7 +29,7 @@ upload.setConfig({
 })
 
 // args: 分片数据、重传次数、云端文件夹、错误信息、邮箱设置
-// upload.upHandle(jsonDataPiece.data, 3, cloudPath, '', emailConfig)
+upload.upHandle(jsonDataPiece.data, 3, cloudPath, '', emailConfig)
 
 storeBlock.del(jsonDataBlock)
 storePiece.search(jsonDataPiece.data[1].uuid, function (params) {
