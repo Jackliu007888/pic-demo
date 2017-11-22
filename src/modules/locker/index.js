@@ -20,6 +20,7 @@ function lock (content) {
 }
 
 function unlock () {
+  if (!check()) return
   return fs.unlinkSync(cfg.lock)
 }
 

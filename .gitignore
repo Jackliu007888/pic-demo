@@ -7,3 +7,5 @@ te.js
 src/config.json
 result.json
 .lock
+temp/*
+!temp/.gitkeep
