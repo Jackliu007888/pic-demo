@@ -18,7 +18,7 @@ function upload(jData, type) {
         'data': jData[i].data
       })
       postsRef.on('value', function (val) {
-        console.log(val.val())
+        // console.log(val.val())
       })
     }
   } else if (Object.prototype.toString.call(jData) === '[object Object]') {
@@ -27,7 +27,7 @@ function upload(jData, type) {
       'data': jData.data
     })
     postsRef.on('value', function (val) {
-      console.log(val.val())
+      // console.log(val.val())
     })
   } else {
     console.log('unknown type')

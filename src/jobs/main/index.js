@@ -8,6 +8,32 @@ var encryptUtils = require('../../modules/cryptology/utils.js')
 var pieceEncrypt = require('../../modules/cryptology/piece.js')
 var blockEncrypt = require('../../modules/cryptology/block.js')
 
+var storeBlock = require('../../modules/upload/storeBlock')
+var storePiece = require('../../modules/upload/storePiece')
+var wilddogUp = require('../../modules/upload/wilddogUp.js')
+var upload = require('../../modules/upload/upload')
+var cloudPath = 'piece/'
+var emailConfig = {
+  service: 'QQex',
+  auth: {
+    user: config.upconfig.emailFrom,
+    pass: config.upconfig.emailPass
+  },
+  from: config.upconfig.emailFrom,
+  to: config.upconfig.emailTo,
+  subject: 'Hello sir',
+  text: 'Hello sir',
+  attachments: [{
+    filename: 'log',
+    path: './dist/log.txt'
+  }]
+}
+
+upload.setConfig({
+  accessKeyId: config.upconfig.accessKeyId,
+  accessKeySecret: config.upconfig.accessKeySecret,
+  emailConfig: emailConfig
+})
 var keyA = encryptUtils.generateKey(config.cryptology.keyA.secret, config.cryptology.keyA.salt)
 var keyB = encryptUtils.generateKey(config.cryptology.keyB.secret, config.cryptology.keyB.salt)
 
@@ -42,7 +68,6 @@ function start (callback) {
       targetFiles.push(files[i])
     }
   }
-
   if (!targetFiles.length) {
     console.log('jobs/main: target files empty')
     callback()
@@ -96,7 +121,11 @@ module.exports = {
 function _getHandlePromise (encryptResult) {
   return new Promise((resolve, reject) => {
     // do upload
-    // ....
+    wilddogUp.upload(encryptResult.resultBlock, 'block')
+    wilddogUp.upload(encryptResult.resultPiece.data, 'piece')
+    upload.upHandle(encryptResult.resultPiece.data, 3, cloudPath, emailConfig)
+    storePiece.add(encryptResult.resultPiece.data)
+    storeBlock.add(encryptResult.resultBlock)
     // upload success
     resolve(encryptResult.resultBlock.uuid)
     // upload failed

@@ -26,8 +26,9 @@ function upHandle(jData, times, cloudPath, errMsg) {
       for (var i = 0; i < jData.length; i++) {
         var uuid = jData[i].uuid
         var data = jData[i].data
-        var result = yield client.put(cloudPath + uuid + '.txt', Buffer.from(data))
-        console.log('No.' + i + ' status: ' + result.res.status)
+        yield client.put(cloudPath + uuid + '.txt', Buffer.from(data))
+        // var result = yield client.put(cloudPath + uuid + '.txt', Buffer.from(data))
+        // console.log('No.' + i + ' status: ' + result.res.status)
       }
     }).then(function (value) {
       // email.sendEmail(emailConfig, '全部分片上传成功', '上传成功')
