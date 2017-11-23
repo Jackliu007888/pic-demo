@@ -12,6 +12,7 @@ var storeBlock = require('../../modules/upload/storeBlock')
 var storePiece = require('../../modules/upload/storePiece')
 var wilddogUp = require('../../modules/upload/wilddogUp.js')
 var upload = require('../../modules/upload/upload')
+
 var cloudPath = 'piece/'
 var emailConfig = {
   service: 'QQex',
@@ -28,29 +29,25 @@ var emailConfig = {
     path: './dist/log.txt'
   }]
 }
+var keyA = encryptUtils.generateKey(config.cryptology.keyA.secret, config.cryptology.keyA.salt)
+var keyB = encryptUtils.generateKey(config.cryptology.keyB.secret, config.cryptology.keyB.salt)
+var rootPath = path.join(__dirname, '../../../')
+var cfg = {
+  path: path.join(rootPath, 'temp'),
+  targetSuffixs: ['.jpg', '.jpeg']
+}
 
 upload.setConfig({
   accessKeyId: config.upconfig.accessKeyId,
   accessKeySecret: config.upconfig.accessKeySecret,
   emailConfig: emailConfig
 })
-var keyA = encryptUtils.generateKey(config.cryptology.keyA.secret, config.cryptology.keyA.salt)
-var keyB = encryptUtils.generateKey(config.cryptology.keyB.secret, config.cryptology.keyB.salt)
-
 pieceEncrypt.config({
   uuidv5NameSpace: config.cryptology.piece.uuidv5NameSpace
 })
-
 blockEncrypt.config({
   uuidv5NameSpace: config.cryptology.block.uuidv5NameSpace
 })
-
-var rootPath = path.join(__dirname, '../../../')
-
-var cfg = {
-  path: path.join(rootPath, 'temp'),
-  targetSuffixs: ['.jpg', '.jpeg']
-}
 
 function config (args) {
   cfg.path = args.path
