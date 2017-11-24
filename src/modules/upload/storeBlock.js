@@ -2,14 +2,14 @@
  * @Author: Jackliu
  * @Date: 2017-11-06 21:29:56
  * @Last Modified by: Jackliu
- * @Last Modified time: 2017-11-16 00:26:17
+ * @Last Modified time: 2017-11-23 23:27:27
  */
 var utils = require('./utils')
 
 utils.connectDb()
 var Block = utils.Block
 
-function add(jData) {
+function add(jData, scb, ecb) {
   Block.findOneAndUpdate({
     uuid: jData.uuid
   }, {
@@ -18,17 +18,25 @@ function add(jData) {
   }, {
     upsert: true
   }, function (err) {
-    if (err) console.log(err)
-    console.log('block update success')
+    if (err) {
+      return ecb(jData.uuid)
+    } else {
+      return scb(jData.uuid)
+    }
   })
 }
 
-function del(jData) {
+function del(jData, scb, ecb) {
   Block.remove({
     uuid: jData.uuid
   }, function (err) {
-    if (err) console.log(err)
-    console.log('block delete success!')
+    if (err) {
+      console.log(err)
+      return ecb(jData.uuid)
+    } else {
+      console.log('block delete success!')
+      return scb(jData.uuid)
+    }
   })
 }
 

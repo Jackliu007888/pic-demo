@@ -4,7 +4,7 @@ var locker = require('./modules/locker/index.js')
 
 var rule = {}
 var times = []
-for (var i = 0; i < 60; i++) {
+for (var i = 0; i < 60; i = i + 5) {
   times.push(i)
 }
 
@@ -12,7 +12,7 @@ rule.second = times
 
 locker.unlock()
 
-schedule.scheduleJob(rule, function() {
+schedule.scheduleJob(rule, function () {
   if (locker.check()) {
     console.log('pic-demo: locked')
   } else {

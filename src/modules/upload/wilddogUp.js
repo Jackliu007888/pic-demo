@@ -9,28 +9,37 @@ function setConfig(cfg) {
 wilddog.initializeApp(config)
 var ref = wilddog.sync().ref()
 
-function upload(jData, type) {
+function upload(jData, type, scb, ecb) {
   var childNode = ref.child(type)
-  if (Object.prototype.toString.call(jData) === '[object Array]') {
-    for (let i = 0; i < jData.length; i++) {
-      var postsRef = childNode.child(jData[i].uuid)
+  if (type === 'piece' && Object.prototype.toString.call(jData.data) === '[object Array]') {
+    for (let i = 0; i < jData.data.length; i++) {
+      var postsRef = childNode.child(jData.data[i].uuid)
       postsRef.set({
-        'data': jData[i].data
-      })
-      postsRef.on('value', function (val) {
-        // console.log(val.val())
+        'data': jData.data[i].data
+      }, function (err) {
+        if (err) {
+          console.log(err)
+          return ecb(jData._uuid)
+        } else {
+          return scb(jData._uuid)
+        }
       })
     }
-  } else if (Object.prototype.toString.call(jData) === '[object Object]') {
+  } else if (type === 'block' && Object.prototype.toString.call(jData) === '[object Object]') {
     var postsRef = childNode.child(jData.uuid)
     postsRef.set({
       'data': jData.data
-    })
-    postsRef.on('value', function (val) {
-      // console.log(val.val())
+    }, function (err) {
+      if (err) {
+        console.log(err)
+        return ecb(jData.uuid)
+      } else {
+        return scb(jData.uuid)
+      }
     })
   } else {
     console.log('unknown type')
+    return ecb(jData)
   }
 }
 

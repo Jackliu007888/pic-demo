@@ -17,15 +17,16 @@ function setConfig(args) {
   emailConfig = args.emailConfig
 }
 
-function upHandle(jData, times, cloudPath, errMsg) {
+function upHandle(jData, times, cloudPath, errMsg, scb, ecb) {
   if (times < 0) {
     errHandle(errMsg)
+    return ecb(jData._uuid)
   } else {
     var client = new OSS(ossConfig)
     co(function* () {
-      for (var i = 0; i < jData.length; i++) {
-        var uuid = jData[i].uuid
-        var data = jData[i].data
+      for (var i = 0; i < jData.data.length; i++) {
+        var uuid = jData.data[i].uuid
+        var data = jData.data[i].data
         yield client.put(cloudPath + uuid + '.txt', Buffer.from(data))
         // var result = yield client.put(cloudPath + uuid + '.txt', Buffer.from(data))
         // console.log('No.' + i + ' status: ' + result.res.status)
@@ -33,6 +34,7 @@ function upHandle(jData, times, cloudPath, errMsg) {
     }).then(function (value) {
       // email.sendEmail(emailConfig, '全部分片上传成功', '上传成功')
       console.log('全部分片上传成功')
+      return scb(jData._uuid)
     }, function (err) {
       console.log('剩余重新上传次数：' + times + '次')
       errMsg = err

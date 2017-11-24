@@ -49,12 +49,12 @@ blockEncrypt.config({
   uuidv5NameSpace: config.cryptology.block.uuidv5NameSpace
 })
 
-function config (args) {
+function config(args) {
   cfg.path = args.path
   cfg.targetSuffixs = args.targetSuffixs
 }
 
-function start (callback) {
+function start(callback) {
   var encryptResultList = []
   var handlePromiseList = []
   var files = fs.readdirSync(cfg.path)
@@ -99,7 +99,7 @@ function start (callback) {
       callback()
     })
 
-  function _getFilePathByUuid (uuid) {
+  function _getFilePathByUuid(uuid) {
     for (var i = 0; i < encryptResultList.length; i++) {
       var item = encryptResultList[i]
       if (item.resultBlock.uuid === uuid) {
@@ -115,17 +115,23 @@ module.exports = {
 }
 
 // TODO
-function _getHandlePromise (encryptResult) {
+function _getHandlePromise(encryptResult) {
   return new Promise((resolve, reject) => {
     // do upload
-    wilddogUp.upload(encryptResult.resultBlock, 'block')
-    wilddogUp.upload(encryptResult.resultPiece.data, 'piece')
-    upload.upHandle(encryptResult.resultPiece.data, 3, cloudPath, emailConfig)
-    storePiece.add(encryptResult.resultPiece.data)
-    storeBlock.add(encryptResult.resultBlock)
+    _storeHandle(encryptResult)
     // upload success
     resolve(encryptResult.resultBlock.uuid)
     // upload failed
     reject(encryptResult.resultBlock.uuid)
   })
+}
+
+function _storeHandle(encryptResult) {
+  // 存储本地MongDB
+  storePiece.add(encryptResult.resultPiece, function (_uuid) {}, function () {})
+  storeBlock.add(encryptResult.resultBlock, function (uuid) {}, function () {})
+  // 上传块文件到野狗，覆盖
+  wilddogUp.upload(encryptResult.resultBlock, 'block', function (uuid) {}, function () {})
+  // 上传到阿里云OSS
+  upload.upHandle(encryptResult.resultPiece, 3, cloudPath, emailConfig, function (_uuid) {}, function () {})
 }
