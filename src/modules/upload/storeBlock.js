@@ -2,7 +2,7 @@
  * @Author: Jackliu
  * @Date: 2017-11-06 21:29:56
  * @Last Modified by: Jackliu
- * @Last Modified time: 2017-11-23 23:27:27
+ * @Last Modified time: 2017-11-25 14:19:51
  */
 var utils = require('./utils')
 
@@ -19,9 +19,9 @@ function add(jData, scb, ecb) {
     upsert: true
   }, function (err) {
     if (err) {
-      return ecb(jData.uuid)
+      ecb(jData.uuid)
     } else {
-      return scb(jData.uuid)
+      scb(jData.uuid)
     }
   })
 }
@@ -32,10 +32,10 @@ function del(jData, scb, ecb) {
   }, function (err) {
     if (err) {
       console.log(err)
-      return ecb(jData.uuid)
+      ecb(jData.uuid)
     } else {
       console.log('block delete success!')
-      return scb(jData.uuid)
+      scb(jData.uuid)
     }
   })
 }
@@ -45,7 +45,7 @@ function search(uuid, cb) {
     uuid: uuid
   }, function (err, doc) {
     if (err) console.log(err)
-    return cb(doc)
+    cb(doc)
   })
 }
 

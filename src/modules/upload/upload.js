@@ -20,7 +20,7 @@ function setConfig(args) {
 function upHandle(jData, times, cloudPath, errMsg, scb, ecb) {
   if (times < 0) {
     errHandle(errMsg)
-    return ecb(jData._uuid)
+    ecb(jData._uuid)
   } else {
     var client = new OSS(ossConfig)
     co(function* () {
@@ -34,7 +34,7 @@ function upHandle(jData, times, cloudPath, errMsg, scb, ecb) {
     }).then(function (value) {
       // email.sendEmail(emailConfig, '全部分片上传成功', '上传成功')
       console.log('全部分片上传成功')
-      return scb(jData._uuid)
+      scb(jData._uuid)
     }, function (err) {
       console.log('剩余重新上传次数：' + times + '次')
       errMsg = err

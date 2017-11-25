@@ -19,9 +19,9 @@ function upload(jData, type, scb, ecb) {
       }, function (err) {
         if (err) {
           console.log(err)
-          return ecb(jData._uuid)
+          ecb(jData._uuid)
         } else {
-          return scb(jData._uuid)
+          scb(jData._uuid)
         }
       })
     }
@@ -32,14 +32,14 @@ function upload(jData, type, scb, ecb) {
     }, function (err) {
       if (err) {
         console.log(err)
-        return ecb(jData.uuid)
+        ecb(jData.uuid)
       } else {
-        return scb(jData.uuid)
+        scb(jData.uuid)
       }
     })
   } else {
     console.log('unknown type')
-    return ecb(jData)
+    ecb(jData)
   }
 }
 

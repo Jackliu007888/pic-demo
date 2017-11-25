@@ -30,10 +30,10 @@ function add(jData, scb, ecb) {
     }
     if (isSuccess) {
       console.log('多分片存储完成')
-      return scb(jData._uuid)
+      scb(jData._uuid)
     } else {
       console.log('多分片存储失败')
-      return ecb(jData._uuid)
+      ecb(jData._uuid)
     }
   } else if (Object.prototype.toString.call(jData.data) === '[object Object]') {
     Pic.findOneAndUpdate({
@@ -46,11 +46,11 @@ function add(jData, scb, ecb) {
     }, function (err) {
       if (err) console.log(err)
       console.log('piece update success!')
-      return scb(jData._uuid)
+      scb(jData._uuid)
     })
   } else {
     console.log('unknown type!')
-    return ecb(jData._uuid)
+    ecb(jData._uuid)
   }
 }
 
@@ -62,10 +62,10 @@ function del(jData, scb, ecb) {
       }, function (err) {
         if (err) {
           console.log(err)
-          return ecb(jData._uuid)
+          ecb(jData._uuid)
         } else {
           console.log('piece delete success!')
-          return scb(jData._uuid)
+          scb(jData._uuid)
         }
       })
     }
@@ -75,10 +75,10 @@ function del(jData, scb, ecb) {
     }, function (err) {
       if (err) {
         console.log(err)
-        return scb(jData._uuid)
+        scb(jData._uuid)
       } else {
         console.log('piece delete success!')
-        return scb(jData._uuid)
+        scb(jData._uuid)
       }
     })
   }
@@ -89,7 +89,7 @@ function search(uuid, cb) {
     uuid: uuid
   }, function (err, doc) {
     if (err) console.log(err)
-    return cb(doc)
+    cb(doc)
   })
 }
 module.exports = {
