@@ -2,13 +2,13 @@
  * @Author: Jackliu
  * @Date: 2017-11-06 21:29:56
  * @Last Modified by: Jackliu
- * @Last Modified time: 2017-11-24 23:41:46
+ * @Last Modified time: 2017-11-26 22:55:29
  */
 var utils = require('./utils')
 
 var Pic = utils.Pic
 
-function add(jData, scb, ecb) {
+function add(jData, errCb, sucCb) {
   if (Object.prototype.toString.call(jData.data) === '[object Array]') {
     var isSuccess = true
     for (var i = 0; i < jData.data.length; i++) {
@@ -30,10 +30,10 @@ function add(jData, scb, ecb) {
     }
     if (isSuccess) {
       console.log('多分片存储完成')
-      scb(jData._uuid)
+      sucCb(jData._uuid)
     } else {
       console.log('多分片存储失败')
-      ecb(jData._uuid)
+      errCb(jData._uuid)
     }
   } else if (Object.prototype.toString.call(jData.data) === '[object Object]') {
     Pic.findOneAndUpdate({
@@ -46,15 +46,15 @@ function add(jData, scb, ecb) {
     }, function (err) {
       if (err) console.log(err)
       console.log('piece update success!')
-      scb(jData._uuid)
+      sucCb(jData._uuid)
     })
   } else {
     console.log('unknown type!')
-    ecb(jData._uuid)
+    errCb(jData._uuid)
   }
 }
 
-function del(jData, scb, ecb) {
+function del(jData, errCb, sucCb) {
   if (Object.prototype.toString.call(jData.data) === '[object Array]') {
     for (var i = 0; i < jData.data.length; i++) {
       Pic.remove({
@@ -62,10 +62,10 @@ function del(jData, scb, ecb) {
       }, function (err) {
         if (err) {
           console.log(err)
-          ecb(jData._uuid)
+          errCb(jData._uuid)
         } else {
           console.log('piece delete success!')
-          scb(jData._uuid)
+          sucCb(jData._uuid)
         }
       })
     }
@@ -75,10 +75,10 @@ function del(jData, scb, ecb) {
     }, function (err) {
       if (err) {
         console.log(err)
-        scb(jData._uuid)
+        errCb(jData._uuid)
       } else {
         console.log('piece delete success!')
-        scb(jData._uuid)
+        sucCb(jData._uuid)
       }
     })
   }

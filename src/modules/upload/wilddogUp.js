@@ -9,7 +9,7 @@ function setConfig(cfg) {
 wilddog.initializeApp(config)
 var ref = wilddog.sync().ref()
 
-function upload(jData, type, scb, ecb) {
+function upload(jData, type, errCb, sucCb) {
   var childNode = ref.child(type)
   if (type === 'piece' && Object.prototype.toString.call(jData.data) === '[object Array]') {
     for (let i = 0; i < jData.data.length; i++) {
@@ -19,9 +19,9 @@ function upload(jData, type, scb, ecb) {
       }, function (err) {
         if (err) {
           console.log(err)
-          ecb(jData._uuid)
+          errCb(jData._uuid)
         } else {
-          scb(jData._uuid)
+          sucCb(jData._uuid)
         }
       })
     }
@@ -32,18 +32,25 @@ function upload(jData, type, scb, ecb) {
     }, function (err) {
       if (err) {
         console.log(err)
-        ecb(jData.uuid)
+        errCb(jData.uuid)
       } else {
-        scb(jData.uuid)
+        sucCb(jData.uuid)
       }
     })
   } else {
     console.log('unknown type')
-    ecb(jData)
+    errCb(jData)
   }
+}
+
+function del(uuid) {
+  var childNode = ref.child('block')
+  var postRef = childNode.child(uuid)
+  postRef.remove()
 }
 
 module.exports = {
   setConfig,
-  upload
+  upload,
+  del
 }
