@@ -7,28 +7,8 @@ var pure = require('../../modules/pure/index.js')
 var encryptUtils = require('../../modules/cryptology/utils.js')
 var pieceEncrypt = require('../../modules/cryptology/piece.js')
 var blockEncrypt = require('../../modules/cryptology/block.js')
+var modelPic = require('../../models/pic.js')
 
-var storeBlock = require('../../modules/upload/storeBlock')
-var storePiece = require('../../modules/upload/storePiece')
-var wilddogUp = require('../../modules/upload/wilddogUp.js')
-var upload = require('../../modules/upload/upload')
-
-var cloudPath = 'piece/'
-var emailConfig = {
-  service: 'QQex',
-  auth: {
-    user: config.upconfig.emailFrom,
-    pass: config.upconfig.emailPass
-  },
-  from: config.upconfig.emailFrom,
-  to: config.upconfig.emailTo,
-  subject: 'Hello sir',
-  text: 'Hello sir',
-  attachments: [{
-    filename: 'log',
-    path: './dist/log.txt'
-  }]
-}
 var keyA = encryptUtils.generateKey(config.cryptology.keyA.secret, config.cryptology.keyA.salt)
 var keyB = encryptUtils.generateKey(config.cryptology.keyB.secret, config.cryptology.keyB.salt)
 var rootPath = path.join(__dirname, '../../../')
@@ -36,12 +16,8 @@ var cfg = {
   path: path.join(rootPath, 'temp'),
   targetSuffixs: ['.jpg', '.jpeg']
 }
+var stopped = false
 
-upload.setConfig({
-  accessKeyId: config.upconfig.accessKeyId,
-  accessKeySecret: config.upconfig.accessKeySecret,
-  emailConfig: emailConfig
-})
 pieceEncrypt.config({
   uuidv5NameSpace: config.cryptology.piece.uuidv5NameSpace
 })
@@ -55,6 +31,11 @@ function config(args) {
 }
 
 function start(callback) {
+  if (stopped) {
+    console.log('jobs/main: stopped with error')
+    callback()
+    return
+  }
   var encryptResultList = []
   var handlePromiseList = []
   var files = fs.readdirSync(cfg.path)
@@ -114,24 +95,23 @@ module.exports = {
   start
 }
 
-// TODO
 function _getHandlePromise(encryptResult) {
   return new Promise((resolve, reject) => {
-    // do upload
-    _storeHandle(encryptResult)
-    // upload success
-    resolve(encryptResult.resultBlock.uuid)
-    // upload failed
-    reject(encryptResult.resultBlock.uuid)
+    modelPic.add(encryptResult)
+      .then(function () {
+        resolve(encryptResult.resultBlock.uuid)
+      })
+      .catch(function (err) {
+        console.log('jobs/main: modelPic add faild', err)
+        modelPic.del(encryptResult)
+          .then(function () {
+            reject(encryptResult.resultBlock.uuid)
+          })
+          .catch(function (err) {
+            console.log('jobs/main: modelPic del faild', err)
+            console.log('jobs/main: stopped')
+            stopped = true
+          })
+      })
   })
-}
-
-function _storeHandle(encryptResult) {
-  // 存储本地MongDB
-  storePiece.add(encryptResult.resultPiece, function (_uuid) {}, function () {})
-  storeBlock.add(encryptResult.resultBlock, function (uuid) {}, function () {})
-  // 上传块文件到野狗，覆盖
-  wilddogUp.upload(encryptResult.resultBlock, 'block', function (uuid) {}, function () {})
-  // 上传到阿里云OSS
-  upload.upHandle(encryptResult.resultPiece, 3, cloudPath, emailConfig, function (_uuid) {}, function () {})
 }

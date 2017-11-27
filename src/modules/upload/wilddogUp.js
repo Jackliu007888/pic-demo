@@ -46,7 +46,7 @@ function upload(jData, type, errCb, sucCb) {
 function del(uuid) {
   var childNode = ref.child('block')
   var postRef = childNode.child(uuid)
-  postRef.remove()
+  return postRef.remove()
 }
 
 module.exports = {
