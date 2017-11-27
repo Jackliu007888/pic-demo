@@ -8,7 +8,7 @@ var blockEncrypt = require('./modules/cryptology/block.js')
 
 var keyA = encryptUtils.generateKey(config.cryptology.keyA.secret, config.cryptology.keyA.salt)
 var keyB = encryptUtils.generateKey(config.cryptology.keyB.secret, config.cryptology.keyB.salt)
-
+console.log(keyA.toString('hex'), keyB.toString('hex'))
 var encryptResult = ''
 var decryptResult = ''
 
