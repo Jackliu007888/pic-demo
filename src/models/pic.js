@@ -31,19 +31,25 @@ upload.setConfig({
 
 function add (encryptResult) {
   return Promise.all([
-    _getStoreBlockAddPromise(encryptResult.resultBlock),
     _getStorePieceAddPromise(encryptResult.resultPiece),
-    _getWilddogBlockAddPromise(encryptResult.resultBlock),
     _getCndPieceAddPromise(encryptResult.resultPiece)
-  ])
+  ]).then(function () {
+    return Promise.all([
+      _getStoreBlockAddPromise(encryptResult.resultBlock),
+      _getWilddogBlockAddPromise(encryptResult.resultBlock)
+    ])
+  })
 }
 
 function del (encryptResult) {
   return Promise.all([
-    _getStoreBlockDelPromise(encryptResult.resultBlock),
-    _getStorePieceDelPromise(encryptResult.resultPiece),
-    _getWilddogBlockDelPromise(encryptResult.resultBlock)
-  ])
+    _getStorePieceDelPromise(encryptResult.resultPiece)
+  ]).then(function () {
+    return Promise.all([
+      _getWilddogBlockDelPromise(encryptResult.resultBlock),
+      _getStoreBlockDelPromise(encryptResult.resultBlock)
+    ])
+  })
 }
 
 module.exports = {

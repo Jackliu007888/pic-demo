@@ -9,3 +9,4 @@ result.json
 .lock
 temp/*
 !temp/.gitkeep
+_temp
