@@ -2,14 +2,14 @@
  * @Author: Jackliu
  * @Date: 2017-11-06 21:29:56
  * @Last Modified by: Jackliu
- * @Last Modified time: 2017-11-26 22:58:45
+ * @Last Modified time: 2017-11-27 23:36:27
  */
 var utils = require('./utils')
 
 utils.connectDb()
 var Block = utils.Block
 
-function add(jData, errCb, sucCb) {
+function add (jData, errCb, sucCb) {
   Block.findOneAndUpdate({
     uuid: jData.uuid
   }, {
@@ -26,7 +26,7 @@ function add(jData, errCb, sucCb) {
   })
 }
 
-function del(jData, errCb, sucCb) {
+function del (jData, errCb, sucCb) {
   Block.remove({
     uuid: jData.uuid
   }, function (err) {
@@ -40,7 +40,7 @@ function del(jData, errCb, sucCb) {
   })
 }
 
-function search(uuid, cb) {
+function search (uuid, cb) {
   Block.find({
     uuid: uuid
   }, function (err, doc) {

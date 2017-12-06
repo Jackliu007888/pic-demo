@@ -2,35 +2,37 @@ var fs = require('fs')
 var path = require('path')
 var Promise = require('promise-polyfill')
 
-var config = require('../../config.json')
+var configJson = require('../../config.json')
 var pure = require('../../modules/pure/index.js')
 var encryptUtils = require('../../modules/cryptology/utils.js')
 var pieceEncrypt = require('../../modules/cryptology/piece.js')
 var blockEncrypt = require('../../modules/cryptology/block.js')
 var modelPic = require('../../models/pic.js')
 
-var keyA = encryptUtils.generateKey(config.cryptology.keyA.secret, config.cryptology.keyA.salt)
-var keyB = encryptUtils.generateKey(config.cryptology.keyB.secret, config.cryptology.keyB.salt)
+var keyA = encryptUtils.generateKey(configJson.cryptology.keyA.secret, configJson.cryptology.keyA.salt)
+var keyB = encryptUtils.generateKey(configJson.cryptology.keyB.secret, configJson.cryptology.keyB.salt)
 var rootPath = path.join(__dirname, '../../../')
 var cfg = {
   path: path.join(rootPath, 'temp'),
-  targetSuffixs: ['.jpg', '.jpeg']
+  targetSuffixs: ['.jpg', '.jpeg', '.png'],
+  jsonSuffixs: ['.json']
 }
 var stopped = false
 
 pieceEncrypt.config({
-  uuidv5NameSpace: config.cryptology.piece.uuidv5NameSpace
+  uuidv5NameSpace: configJson.cryptology.piece.uuidv5NameSpace
 })
 blockEncrypt.config({
-  uuidv5NameSpace: config.cryptology.block.uuidv5NameSpace
+  uuidv5NameSpace: configJson.cryptology.block.uuidv5NameSpace
 })
 
-function config(args) {
+function config (args) {
   cfg.path = args.path
   cfg.targetSuffixs = args.targetSuffixs
+  cfg.jsonSuffixs = args.jsonSuffixs
 }
 
-function start(callback) {
+function start (callback) {
   if (stopped) {
     console.log('jobs/main: stopped with error')
     callback()
@@ -40,21 +42,31 @@ function start(callback) {
   var handlePromiseList = []
   var files = fs.readdirSync(cfg.path)
   var targetFiles = []
+  var targetJson = []
 
-  for (var i = 0; i < files.length; i++) {
+  for (let i = 0; i < files.length; i++) {
     if (pure.checkSubfix(files[i], cfg.targetSuffixs)) {
       targetFiles.push(files[i])
     }
+    if (pure.checkSubfix(files[i], cfg.jsonSuffixs)) {
+      targetJson.push(files[i])
+    }
   }
-  if (!targetFiles.length) {
+
+  if (!targetFiles.length && !targetJson) {
     console.log('jobs/main: target files empty')
     callback()
     return
   }
 
+  targetJson.forEach(function (file) {
+    // todo 加密上传删除
+    console.log(file)
+  })
+
   targetFiles.forEach(function (file) {
     var encryptResult =
-      pieceEncrypt.encrypt(keyA, path.join(cfg.path, file))
+    pieceEncrypt.encrypt(keyA, path.join(cfg.path, file))
     encryptResult.resultBlock.data =
       blockEncrypt.encrypt(keyB, encryptResult.resultBlock.data)
     var tempPromise = _getHandlePromise(encryptResult)
@@ -80,7 +92,7 @@ function start(callback) {
       callback()
     })
 
-  function _getFilePathByUuid(uuid) {
+  function _getFilePathByUuid (uuid) {
     for (var i = 0; i < encryptResultList.length; i++) {
       var item = encryptResultList[i]
       if (item.resultBlock.uuid === uuid) {
@@ -95,7 +107,7 @@ module.exports = {
   start
 }
 
-function _getHandlePromise(encryptResult) {
+function _getHandlePromise (encryptResult) {
   return new Promise((resolve, reject) => {
     modelPic.add(encryptResult)
       .then(function () {

@@ -4,7 +4,7 @@ var locker = require('./modules/locker/index.js')
 
 var rule = {}
 var times = []
-for (var i = 0; i < 60; i = i + 5) {
+for (var i = 0; i < 60; i = i + 10) {
   times.push(i)
 }
 
