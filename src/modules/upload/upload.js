@@ -9,7 +9,7 @@ var ossConfig = {
   bucket: 'pic-demo'
 }
 
-function setConfig(args) {
+function setConfig (args) {
   ossConfig.region = args.region || ossConfig.region
   ossConfig.bucket = args.bucket || ossConfig.bucket
   ossConfig.accessKeyId = args.accessKeyId || ossConfig.accessKeyId
@@ -17,7 +17,7 @@ function setConfig(args) {
   emailConfig = args.emailConfig
 }
 
-function upHandle(jData, times, cloudPath, errMsg, errCb, sucCb) {
+function upHandle (jData, times, cloudPath, errMsg, errCb, sucCb) {
   if (times < 0) {
     errHandle(errMsg)
     errCb(jData._uuid)
@@ -43,7 +43,7 @@ function upHandle(jData, times, cloudPath, errMsg, errCb, sucCb) {
   }
 }
 
-function errHandle(err) {
+function errHandle (err) {
   // 写入本地日志
   var date = new Date()
   fs.appendFile(emailConfig.attachments[0].path, date + '\n' + err + '\n', function (err) {

@@ -37,6 +37,18 @@ function upload (jData, type, errCb, sucCb) {
         sucCb(jData.uuid)
       }
     })
+  } else if (type === 'info' && Object.prototype.toString.call(jData) === '[object Object]') {
+    let postsRef = childNode.child(jData.uuid)
+    postsRef.set({
+      'data': jData.data
+    }, function (err) {
+      if (err) {
+        console.log(err)
+        errCb(jData.uuid)
+      } else {
+        sucCb(jData.uuid)
+      }
+    })
   } else {
     console.log('unknown type')
     errCb(jData)

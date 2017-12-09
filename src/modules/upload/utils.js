@@ -2,11 +2,11 @@
  * @Author: Jackliu
  * @Date: 2017-11-06 21:29:56
  * @Last Modified by: Jackliu
- * @Last Modified time: 2017-11-16 00:26:56
+ * @Last Modified time: 2017-12-09 16:13:57
  */
 var mongoose = require('mongoose')
 
-function connectDb(params) {
+function connectDb (params) {
   var db = mongoose.connect('mongodb://localhost/pic-demo', {
     useMongoClient: true
   })

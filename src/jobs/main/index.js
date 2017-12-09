@@ -53,7 +53,7 @@ function start (callback) {
     }
   }
 
-  if (!targetFiles.length && !targetJson) {
+  if (!targetFiles.length && !targetJson.length) {
     console.log('jobs/main: target files empty')
     callback()
     return
@@ -62,6 +62,24 @@ function start (callback) {
   targetJson.forEach(function (file) {
     // todo 加密上传删除
     console.log(file)
+    var jsonData = JSON.parse(fs.readFileSync(path.join(cfg.path, file)))
+    var encryptRes = {}
+    encryptRes.data = blockEncrypt.encrypt(keyB, JSON.stringify(jsonData.data))
+    encryptRes.uuid = file.slice(0, -5)
+    console.log(encryptRes)
+    // console.log(encryptResList)
+    var tempPro = _getHandlePro(encryptRes)
+    tempPro
+      .then(function () {
+        console.log('jobs/main: handle info success ', encryptRes.uuid)
+        fs.unlinkSync(path.join(cfg.path, file))
+      })
+      .catch(function (err) {
+        console.log('jobs/main: handle info faild', err)
+        stopped = true
+        return Promise.resolve()
+      })
+    handlePromiseList.push(tempPro)
   })
 
   targetFiles.forEach(function (file) {
@@ -105,6 +123,17 @@ function start (callback) {
 module.exports = {
   config,
   start
+}
+function _getHandlePro (encryptRes) {
+  return new Promise((resolve, reject) => {
+    modelPic.addInfo(encryptRes)
+      .then(function () {
+        resolve(encryptRes.uuid)
+      }).catch(function (err) {
+        reject(encryptRes.uuid)
+        console.log('jobs/main: modelPic info faild', err)
+      })
+  })
 }
 
 function _getHandlePromise (encryptResult) {

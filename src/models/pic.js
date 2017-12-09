@@ -41,6 +41,13 @@ function add (encryptResult) {
   })
 }
 
+function addInfo (encryptRes) {
+  return Promise.all([
+    // _getStoreBlockAddPromise(encryptResult.resultInfo),
+    _getWilddogInfoAddPromise(encryptRes)
+  ])
+}
+
 function del (encryptResult) {
   return Promise.all([
     _getStorePieceDelPromise(encryptResult.resultPiece)
@@ -54,11 +61,12 @@ function del (encryptResult) {
 
 module.exports = {
   add,
-  del
+  del,
+  addInfo
 }
 
 function _getStoreBlockAddPromise (resultBlock) {
-  return new Promise(function(resolve, reject) {
+  return new Promise(function (resolve, reject) {
     storeBlock.add(resultBlock, function (uuid) {
       reject(uuid)
     }, function () {
@@ -68,7 +76,7 @@ function _getStoreBlockAddPromise (resultBlock) {
 }
 
 function _getStoreBlockDelPromise (resultBlock) {
-  return new Promise(function(resolve, reject) {
+  return new Promise(function (resolve, reject) {
     storeBlock.del(resultBlock, function (uuid) {
       reject(uuid)
     }, function () {
@@ -78,7 +86,7 @@ function _getStoreBlockDelPromise (resultBlock) {
 }
 
 function _getStorePieceAddPromise (resultPiece) {
-  return new Promise(function(resolve, reject) {
+  return new Promise(function (resolve, reject) {
     storePiece.add(resultPiece, function (uuid) {
       reject(uuid)
     }, function () {
@@ -88,7 +96,7 @@ function _getStorePieceAddPromise (resultPiece) {
 }
 
 function _getStorePieceDelPromise (resultPiece) {
-  return new Promise(function(resolve, reject) {
+  return new Promise(function (resolve, reject) {
     storePiece.del(resultPiece, function (uuid) {
       reject(uuid)
     }, function () {
@@ -98,7 +106,7 @@ function _getStorePieceDelPromise (resultPiece) {
 }
 
 function _getWilddogBlockAddPromise (resultBlock) {
-  return new Promise(function(resolve, reject) {
+  return new Promise(function (resolve, reject) {
     wilddogUp.upload(resultBlock, 'block', function (uuid) {
       reject(uuid)
     }, function () {
@@ -107,9 +115,9 @@ function _getWilddogBlockAddPromise (resultBlock) {
   })
 }
 
-function _getWilddogBlockAddPromise (resultBlock) {
-  return new Promise(function(resolve, reject) {
-    wilddogUp.upload(resultBlock, 'block', function (uuid) {
+function _getWilddogInfoAddPromise (encryptRes) {
+  return new Promise(function (resolve, reject) {
+    wilddogUp.upload(encryptRes, 'info', function (uuid) {
       reject(uuid)
     }, function () {
       resolve()
